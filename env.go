@@ -18,6 +18,7 @@ func main() {
 	// - /static/ws.html
 	// - /static/js/jquery-2.1.4.min.js
 	http.HandleFunc("/env", envHandler)
+	http.HandleFunc("/", envHandler)
 	http.HandleFunc("/crash", crashHandler)
 	http.HandleFunc("/headers", headersHandler)
 	addr := ":" + os.Getenv("PORT")
