@@ -10,8 +10,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"io/ioutil"
+	"math/rand"
 )
 
 func getCurrentDifficulty() float64 {
@@ -24,24 +24,28 @@ func getCurrentDifficulty() float64 {
         defer res.Body.Close()
 	difficulty, err := ioutil.ReadAll(res.Body)
         json.Unmarshal(difficulty, &data)
-	fmt.Println(data["difficulty"])
 	return data["difficulty"].(float64)
 }
 
+var currentDifficulty = getCurrentDifficulty()
+var dummyBlockData = make([]byte, 176)
+
 func main() {
+	rand.Seed(time.Now().UnixNano())
 	http.HandleFunc("/", filePostHasher)
 	addr := ":" + os.Getenv("PORT")
 	fmt.Printf("Listening on %v\n", addr)
-	getCurrentDifficulty()
 	log.Fatal(http.ListenAndServe(addr, nil))
 }
 
 func filePostHasher(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 		case "GET":
-			fmt.Printf("\n%+v\n\n", req)
-			fmt.Fprintf(w,"\n%+v\n\n", req)
-			fmt.Fprintln(w, strings.Join(os.Environ(), "\n"))
+			rand.Read(dummyBlockData)
+			hash := sha256.New()
+			hash.Write(dummyBlockData)
+			//fmt.Fprintln(w, float64(hash.Sum(nil)))
+			fmt.Fprintln(w, hex.EncodeToString(hash.Sum(nil)))
 		case "POST":
 			body, err := ioutil.ReadAll(req.Body)
 			if err != nil {
