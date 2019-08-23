@@ -1,6 +1,7 @@
 applications:
-- name: go-env
-  buildpack: https://github.com/cloudfoundry/go-buildpack#v1.7.0
+- name: go-env5
   memory: 32M
   disk_quota: 100M
-  stack: cflinuxfs2
+  stack: cflinuxfs3
+  env: 
+    GOVERSION: go1.11.11
