@@ -1,5 +1,5 @@
 applications:
-- name: go-env5
+- name: go-env
   memory: 32M
   disk_quota: 100M
   stack: cflinuxfs3
